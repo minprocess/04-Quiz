@@ -8,14 +8,25 @@
 </head>
 <body>
     <header>
-        <div><span id="highscores">High score</span></div>
+        <div><span id="score">Correct answers: 0</span></div>
         <div><span id="time">Time</span></div>
     </header>
     <div>
-        <h2 id="question">Question</h2>
+      <h2 id="question">Question</h2>
 
-        <ul id="choices-list"></ul>
+      <ul id="choices-list">
+          <li>Choice 1</li>
+          <li>Choice 2</li>
+          <li>Choice 3</li>
+          <li>Choice 4</li>
+          <li>Choice 5</li>
+          <li>Choice 6</li>
+      </ul>
     </div>
+    <p id="YourAns"></p>
+    <p id="CorrectAns">Correct answer:</p>
+    <button id="myButton" onclick="btnClick()">Start first question!</button>
+ 
     <script src="./assets/script.js"></script>
 </body>
 </html>
