@@ -81,16 +81,17 @@ function btnClick() {
     console.log("    correctAnsText ", correctAnsText);
     console.log("    yourAnsText ", yourAnsText);
     console.log("    scoreText ", scoreText);
-    
 
     setAttributes();   // setAttributes of li elements
     changeChoices();
 
-    console.log("before addeventlistener");
-    choicesList.addEventListener("click", myOnClick);
+    choicesList.addEventListener("click", myOnClick);   // listen for click on a choice
     timeLeftEl.text = maxTimeGiven;
     timeLeft = maxTimeGiven;
     myBtn.textContent = "Next";
+    scoreText.textContent = "0/" + questions.length;
+    timeLeftText.textContent = maxTimeGiven;
+    // These appear below question and choices
     correctAnsText.textContent = "";
     yourAnsText.textContent = "";
     countSetInterval++;
