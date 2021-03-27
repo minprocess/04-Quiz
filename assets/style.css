@@ -18,22 +18,23 @@ body {
   display:block;
   width: 200px;
   text-align: center;
-  background-color: rgb(29, 87, 29);   /* original color: #cccccc */
+  background-color: purple;   /* original color: #cccccc */
   color: white;
   font-size:large;
   margin: 10px 0px 10px 0px;
+  cursor: pointer;
 
   border-radius: 3px;
   -moz-border-radius: 3px;
   box-shadow: 2px 3px 5px #000000;
 }
-
-.tech li.pointer {
+/*
+.tech li {
     cursor: pointer;
 }
-
+*/
 .tech li:hover {
-    background-color: lightpurple;
+    background-color: rgb(29, 87, 29);  /* rgb(29, 87, 29) */
 }
 
 .software {
