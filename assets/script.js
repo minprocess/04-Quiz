@@ -1,9 +1,9 @@
 var choicesList = document.querySelector("#choices-list");  // ul
 var questionText = document.querySelector("#question");
-var timeLeftEl = document.querySelector("#time");
-var myBtn = document.querySelector("#myButton");
-var correctAnsText = document.querySelector("#CorrectAns");
-var yourAnsText = document.querySelector("#YourAns");
+var timeLeftText = document.querySelector("#time");
+var myBtn = document.querySelector("#my-button");
+var correctAnsText = document.querySelector("#correct-ans");
+var yourAnsText = document.querySelector("#your-ans");
 var scoreText = document.querySelector("#score");
 var curQuest = 0;
 var stage = 0;
@@ -17,8 +17,9 @@ var score;
 var timeLeft;
 var waitFlag;
 var choiceCount;
-var maxChoices = 6;
+var maxChoices = 7;
 var score = 0;
+var hasBeenClicked = false;
 
 var questions = [
     {
@@ -44,11 +45,21 @@ var questions = [
   ];
 
 function setAttributes() {
+  // Create six choices that user can choose from
+  for (var i = 0; i < maxChoices; i++) {
+    var li = document.createElement("li");
+    li.textContent = "";
+    li.setAttribute("data-index", i);
+
+    choicesList.appendChild(li);
+  }
+/*
   var items = choicesList.getElementsByTagName("LI");  // choicesList is the choicesList element
   for (var i = 0; i<maxChoices; i++) {
     items[i].setAttribute("data-index", i);
   }
-}    // end of for loop
+*/
+}    // end of setAtributes
 
 // The following function renders items in a todo list as <li> elements
 function changeChoices() {
@@ -60,6 +71,7 @@ function changeChoices() {
   // Clear list of question choices
   for (var i=0; i < items.length; i++) {
     items[i].textContent = "";
+    console.log("");
   }
   for (var i = 0; i < choiceCount; i++) {
       items[i].textContent = questions[curQuest].choices[i];
@@ -76,7 +88,7 @@ function btnClick() {
 
     console.log("    choicesList ", choicesList);
     console.log("    questionText ", questionText);
-    console.log("    timeLeftEl ", timeLeftEl);
+    console.log("    timeLeftText ", timeLeftText);
     console.log("    myBtn ", myBtn);
     console.log("    correctAnsText ", correctAnsText);
     console.log("    yourAnsText ", yourAnsText);
@@ -86,7 +98,7 @@ function btnClick() {
     changeChoices();
 
     choicesList.addEventListener("click", myOnClick);   // listen for click on a choice
-    timeLeftEl.text = maxTimeGiven;
+    timeLeftText.text = maxTimeGiven;
     timeLeft = maxTimeGiven;
     myBtn.textContent = "Next";
     scoreText.textContent = "0/" + questions.length;
@@ -95,6 +107,7 @@ function btnClick() {
     correctAnsText.textContent = "";
     yourAnsText.textContent = "";
     countSetInterval++;
+    hasBeenClicked = false;
     x = setInterval(myOnTimer, 1000);
     console.log("btnClick stage 1, x", x);
   }
@@ -107,12 +120,13 @@ function btnClick() {
       console.log("btnClick curQuest, questions.length", curQuest, questions.length);
 
       changeChoices();
-      timeLeftEl.text = maxTimeGiven;
+      timeLeftText.text = maxTimeGiven;
       timeLeft = maxTimeGiven;
       myBtn.textContent = "Next";
       yourAnsText.textContent = "Your answer: ";
-      correctAnsTxt.textContent = "The correct answer: ";
+      correctAnsText.textContent = "The correct answer: ";
       countSetInterval++;
+      hasBeenClicked = false;
       x = setInterval(myOnTimer, 1000);  
     }
     else {
@@ -123,12 +137,12 @@ function btnClick() {
 
 function myOnTimer() {
   timeLeft--;
-  timeLeftEl.textContent = timeLeft;
+  timeLeftText.textContent = timeLeft;
   if (timeLeft <= 0) {
     countSetInterval--;
     clearInterval(x);
-    yourAnsText.textContent = "Your answer: ";
-    correctAnsTxt.textContent = "The correct answer: " + questions[curQuest].answer;
+    yourAnsText.textContent = "Time out! No answer was selected. Better luck next time! ";
+    correctAnsText.textContent = "The correct answer: " + questions[curQuest].answer;
   }
 }
 
@@ -144,21 +158,34 @@ function myOnClick(e) {
     target = target.parentNode; // If the clicked element isn't a direct child
     if(!target) { return; } // If element doesn't exist
   }
+  if (hasBeenClicked) {return;}
   console.log("target.tagName: ", target.tagName);
   if (target.tagName === "LI") {
     var index = target.getAttribute("data-index");
-    console.log("index: ", index)
-    console.log("curQuest: ", curQuest)
+    console.log("myOnClick, index", index);
+    console.log("myOnClick, choiceCount", choiceCount);
+    console.log("myOnClick, choice", questions[curQuest].choices[index]);
+    hasBeenClicked = true;
     clearInterval(x);  // stop timer
     //var msg;
-    yourAnsText.textContent = "Your answer is " + questions[curQuest].choices[index];
-    if (questions[curQuest].choices[index] == questions[curQuest].answer) {
-      correctAnsText.textContent = "You are right. The correct answer is " + questions[curQuest].answer + ". Good going!";
+    if (questions[curQuest].choices[index] == "") {
+      // will only be here if user clicked a blank choice. Don't allow that
+      yourAnsText.textContent = "You clicked on a blank choice";
+      correctAnsText.textContent = "The correct answer is " + questions[curQuest].answer + ". Better luck next time!";
+    }
+    else if (index == choiceCount-1) {
+      yourAnsText.textContent = "You clicked 'I don't know'";
+      correctAnsText.textContent = "The correct answer is " + questions[curQuest].answer + ". Better luck next time!";
+    }
+    else if (questions[curQuest].choices[index] == questions[curQuest].answer) {
+      console.log("correct answer!");
+      yourAnsText.textContent = "You are right! Your answer is " + questions[curQuest].choices[index] + ". Good going!";
+      correctAnsText.textContent = "The correct answer is " + questions[curQuest].answer;
       incScore();
-      // change color of myButton
     }
     else {
-      correctAnsTxt.textContent = "You are wrong. The correct answer is " + questions[curQuest].answer + ". Nice try!";
+      yourAnsText.textContent = "Sorry, wrong answer! Your answer is " + questions[curQuest].choices[index];
+      correctAnsText.textContent = "The correct answer is " + questions[curQuest].answer + ". Better luck next time!";
     }
     myBtn.textContent = "Next";
   }   // end of myOnClick
