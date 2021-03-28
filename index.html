@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>What web pages looked like in the 1800s</title>
-    <link rel="stylesheet" href="./assets/style.css">
-</head>
-<body>
-  <h2>The Quizzitronic. This quiz was coded with only HTML, CSS and Javascript as a learning exercise.</h2>
+  <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>What web pages looked like in the 1800s</title>
+      <link rel="stylesheet" href="./assets/style.css">
+  </head>
+  <body>
+    <h2>The Quiztronic Quiz Master. This quiz was coded with only HTML, CSS and Javascript as a learning exercise.</h2>
 
-<div class="grid1">
-    <div class="grid-item">Correct answers</div>
-    <div class="grid-item">Score</div>
-    <div class="grid-item">Time left</div>
+    <div class="grid1">
+      <div class="grid-item">Correct answers</div>
+      <div class="grid-item">Score</div>
+      <div class="grid-item">Time left</div>
 
-    <div class="grid-item" id="numCorrectAnsSoFar">0/4</div>
-    <div class="grid-item" id="score">0/4</div>
-    <div class="grid-item" id="time">15</div>
-</div>
+      <div class="grid-item" id="numCorrectAnsSoFar">0/4</div>
+      <div class="grid-item" id="score">0</div>
+      <div class="grid-item" id="time">15</div>
+    </div>
 
     <div>
       <h2 id="question"></h2>  <!-- Question text will go here -->
@@ -29,44 +29,41 @@
     <p id="your-ans"></p>
     <p id="correct-ans"></p>
     <button id="next-button" onclick="btnClickNext()">Start first question!</button>
- 
+  
     <!-- At end of quiz give use chance to enter score into Hall of Fame -->
     <h2 id="hofQuestion"></h2>  <!-- Want to enter your score into Hall of Fame? -->
     <label for="initials">Initials:</label>
     <input type="text" id="initials" required placeholder="Initials">
-    <button id="record-score-button" onclick="btnClickInitials()">Enter my score!</button>
+    <button id="record-score" onclick="btnClickInitials()">Enter my score!</button>
     <!-- I don't have time to create rows and columns programmatically so here is a quick table -->
     <h2>Last 5 scores </h2>
     <table>
       <tr>
         <td id="initials0"></td>
         <td id="score0"></td>
-        <td id="corAns0"></td>
+        <td id="corr-ans0"></td>
       </tr>
       <tr>
         <td id="initials1"></td>
         <td id="score1"></td>
-        <td id="corAns2"></td>
+        <td id="corr-ans1"></td>
       </tr>
       <tr>
         <td id="initials2"></td>
         <td id="score2"></td>
-        <td id="corAns2"></td>
+        <td id="corr-ans2"></td>
       </tr>
       <tr>
         <td id="initials3"></td>
         <td id="score3"></td>
-        <td id="corAns3"></td>
+        <td id="corr-ans3"></td>
       </tr>
       <tr>
         <td id="initials4"></td>
         <td id="score4"></td>
-        <td id="corAns4"></td>
+        <td id="corr-ans4"></td>
       </tr>
-      </table>
-    
-
-
+    </table>
     <script src="./assets/script.js"></script>
-</body>
+  </body>
 </html>

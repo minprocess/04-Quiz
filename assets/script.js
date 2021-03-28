@@ -5,9 +5,9 @@ var nextBtn = document.querySelector("#next-button");
 var correctAnsText = document.querySelector("#correct-ans");
 var yourAnsText = document.querySelector("#your-ans");
 var scoreText = document.querySelector("#score");
-var numCorrAnsSoText = document.querySelector("numCorrectAnsSoFar");
-var hofQuestionText = document.querySelector("hofQuestion");
-var recScoreBtn = document.querySelector.apply("record-score-button");
+var numCorrAnsSoFarText = document.querySelector("#numCorrectAnsSoFar");
+var hofQuestionText = document.querySelector("#hofQuestion");
+var recScoreBtn = document.querySelector("#record-score");
 var curQuest = 0;
 var stage = 0;
 var maxTimeGiven = 15;  // seconds
@@ -24,7 +24,10 @@ var choiceCount;
 var maxChoices = 7;
 var score = 0;
 var hasBeenClicked = false;
-var hofTable;  // Hall of Fame stored scores
+var hofInitials[];
+var hofScores[];
+var hofCorrAns[];
+
 
 var questions = [
     {
@@ -106,7 +109,7 @@ function btnClickNext() {
     timeLeftText.text = maxTimeGiven;
     timeLeft = maxTimeGiven;
     nextBtn.textContent = "Next";
-    scoreText.textContent = "0/" + questions.length;
+    scoreText.textContent = "0";
     timeLeftText.textContent = maxTimeGiven;
     // These appear below question and choices
     correctAnsText.textContent = "";
@@ -114,6 +117,7 @@ function btnClickNext() {
     countSetInterval++;
     hasBeenClicked = false;
     recScoreBtn = true;
+    numCorrAnsSoFar = 0;
     x = setInterval(myOnTimer, 1000);
     console.log("btnClick stage 1, x", x);
   }
@@ -153,8 +157,8 @@ function myOnTimer() {
 }
 
 function UpdateDashboard() {
+  numCorrAnsSoFarText.textContent = numCorrAnsSoFar + "/" + (curQuest+1);
   scoreText.textContent = score;
-  
 }
 
 // This is handler for clicking one of the choices
@@ -187,20 +191,22 @@ function onClickChoice(e) {
     }
     else if (questions[curQuest].choices[index] == questions[curQuest].answer) {
       console.log("correct answer!");
-      yourAnsText.textContent = "Your answer is " + questions[curQuest].choices[index] + "which is correct! Good going!";
-      correctAnsText.textContent = "";
+      yourAnsText.textContent = "Your answer is " + questions[curQuest].choices[index] + ", which is correct! Good going!";
+      correctAnsText.textContent = "";   // No need to show correct answer when the user got it right
       score += timeLeft;
-      numCorrectAnswersSoFar += 1;
-      UpdateDashboard();
+      numCorrAnsSoFar += 1;
     }
     else {
       yourAnsText.textContent = "Sorry, wrong answer! Your answer is " + questions[curQuest].choices[index];
       correctAnsText.textContent = "The correct answer is " + questions[curQuest].answer + ". Better luck next time!";
     }
-    
+    UpdateDashboard();
+
     if (curQuest == questions.length-1) {
-      nextBtn.disabled = true;
-      recScoreBtn = false;
+      //nextBtn.disabled = true;
+      nextBtn.textContent = "Take the quiz again";
+      recScoreBtn.disabled = false;
+      curQuest = 0;
     }
     else {
       nextBtn.textContent = "Next";
@@ -209,35 +215,44 @@ function onClickChoice(e) {
 
   function btnClickInitials() {
     initialsEl = document.querySelector("#initials");
-    hofTable.push([initialsEl.textContent, score, numCorrAnsSoFar]);
+    hofInitials.unshift(initialsEl.textContent);
+    hofScores.unshift(score);
+    hofCorrAns.unshift(numCorrAnsSoFar);
   }
 
 // End of quiz
 // 1. get scores from storage
 function AddScore() {
   // Stringify and set key in localStorage to todos array
-  localStorage.setItem("hofTable", JSON.stringify(hofTable));
+  localStorage.setItem("hofInitials", JSON.stringify(hofInitials));
+  localStorage.setItem("hofScores", JSON.stringify(hofInitials));
+  localStorage.setItem("hofCorrAns", JSON.stringify(hofInitials));
 
 }   // End of function endOfQuiz() 
 
 function fillHOFTable() {
   // Read scores from local storage
-  hofTable = JSON.parse(localStorage.getItem("hofTable"));
-  
+  hofInitials = JSON.parse(localStorage.getItem("hofInitials"));  // array of initials
+  hofScores = JSON.parse(localStorage.getItem("hofScores"));    // array of scores
+  hofCorrAns = JSON.parse(localStorage.getItem("hofCorrAns"));    // array of correct answers
+
   // If todos were retrieved from localStorage, update the todos array to it
   var j;
-  var rowid;
-  var initialsEl;
-  var colid;
+  var cell;
+  var Elem;
   var scoreEl;
   if (storedScores !== null) {
     for (var i=0; i<Math.min(storedScores.length, 5); i++) {
-      rowid = "#initials" + i;
-      initialsEl = document.querySelector(rowid);
-      initialsEl.textContent = storeScores[i,0];
-      colid = "#score" + i;
-      scoreEl = document.querySelector(colid);
-      scoreEl.textContent = storeScores[i,0];
+      cell = "#initials" + i;
+      Elem = document.querySelector(cell);  // initials
+      Elem.textContent = hofInitials[i];
+      cell = "#score" + i;
+      Elem = document.querySelector(cell);   // score
+      Elem.textContent = hofScores[i,0];
+      cell = "#corr-ans" + i;
+      Elem = document.querySelector(cell);    // correct answers
+      Elem.textContent = hofCorrAns[i,0];
+
     }
   }
 }
@@ -246,4 +261,4 @@ function saveScore() {
 
 }
 
-}   // end of function onClickChoice for addeventlistener for choicesList
+//}   // end of function onClickChoice for addeventlistener for choicesList
