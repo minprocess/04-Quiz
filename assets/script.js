@@ -31,16 +31,6 @@ var hofStored;   // initials, score, correct answers; equivalent to hofInitials,
 
 var questions = [
     {
-      title: "What is my favorite food?",
-      choices: ["pizza", "pasta", "bread", "none of the above", "I don't know"],
-      answer: "pasta"
-    },
-    {
-      title: "What is my name?",
-      choices: ["ant", "tom", "stacey", "none of the above", "I don't know"],
-      answer: "ant"
-    },
-    {
       title: "Which of the following is not valid for alight-items?",
       choices: ["flex-start", "center", "bottom", "stretch", "flex-end", "none of the above", "I don't know"],
       answer: "bottom"
@@ -49,6 +39,16 @@ var questions = [
       title: "Which of the following is not valid for justify-content?",
       choices: ["space-between", "flex-start", "flex-end", "center", "space-around", "none of the above", "I don't know"],
       answer: "none of the above"
+    },
+    {
+      title: "What is the best food while coding Javascript?",
+      choices: ["pizza", "pasta", "bread", "none of the above", "I don't know"],
+      answer: "pasta"
+    },
+    {
+      title: "What is the name of your Javascript instructor?",
+      choices: ["Ant", "Michael", "Stacey", "none of the above", "I don't know"],
+      answer: "Ant"
     }
   ];
 
@@ -61,15 +61,9 @@ function setAttributes() {
 
     choicesList.appendChild(li);
   }
-/*
-  var items = choicesList.getElementsByTagName("LI");  // choicesList is the choicesList element
-  for (var i = 0; i<maxChoices; i++) {
-    items[i].setAttribute("data-index", i);
-  }
-*/
 }    // end of setAtributes
 
-// The following function renders items in a todo list as <li> elements
+// The following function renders items in a choices list as <li> elements
 function changeChoices() {
   // Set new question text
   questionText.innerHTML = questions[curQuest].title;
@@ -87,20 +81,12 @@ function changeChoices() {
   items[choiceCount] = "I don't know";
 }
 
-// Handler for click on Button
+// Handler for click on Next Button
 function btnClickNext() {
   if (stage == 0) {
     // Stage 1 - Waiting to start
     stage = 1;
-/*
-    console.log("    choicesList ", choicesList);
-    console.log("    questionText ", questionText);
-    console.log("    timeLeftText ", timeLeftText);
-    console.log("    nextBtn ", nextBtn);
-    console.log("    correctAnsText ", correctAnsText);
-    console.log("    yourAnsText ", yourAnsText);
-    console.log("    scoreText ", scoreText);
-*/
+
     setAttributes();   // setAttributes of li elements
     changeChoices();
 
@@ -122,12 +108,9 @@ function btnClickNext() {
   }
   else {
     // Stage 2 - Asking questions
-    //console.log("btnClick in Stage 2");
     curQuest++;
     if (curQuest < questions.length)
     {
-      //console.log("btnClick curQuest, questions.length", curQuest, questions.length);
-
       changeChoices();
       timeLeftText.text = maxTimeGiven;
       timeLeft = maxTimeGiven;
@@ -173,7 +156,6 @@ function onClickChoice(e) {
     var index = target.getAttribute("data-index");
     hasBeenClicked = true;
     clearInterval(x);  // stop timer
-    //var msg;
     if (questions[curQuest].choices[index] == "") {
       // will only be here if user clicked a blank choice. Don't allow that
       yourAnsText.textContent = "You clicked on a blank choice";
@@ -203,28 +185,10 @@ function onClickChoice(e) {
       nextBtn.textContent = "Take the quiz again";
       recScoreBtn.disabled = false;
       curQuest = 0;
-      /*
-      hofInitials = JSON.parse(localStorage.getItem("hofInitials"));
-      if (hofInitials == null) {
-        hofInitials = ['wtp'];
-        localStorage.setItem("hofInitials", JSON.stringify(hofInitials));
-      }
-      hofScores = JSON.parse(localStorage.getItem("hofScores"));
-      if (hofScores == null) {
-        hofInitials = [0];
-        localStorage.setItem("hofScores", JSON.stringify(hofScores));
-      }
-      hofCorrAns = JSON.parse(localStorage.getItem("hofCorrAns"));
-      if (hofCorrAns == null) {
-        hofCorrAns = [0];
-        localStorage.setItem("hofCorrAns", JSON.stringify(hofCorrAns));        
-      }
-*/
       hofStored = JSON.parse(localStorage.getItem("hofStored") || "[]");
       if (hofStored.length > 0) {
         console.log("hofstored[0].initials", hofStored[0].initials);
       }
-      //users = JSON.parse(localStorage.getItem("users") || "[]");
 
       var tableTitle = document.querySelector("#hof-title");
       tableTitle.textContent = "Last 10 Scores Newest to Oldest";
@@ -238,55 +202,55 @@ function onClickChoice(e) {
 }   // End of onClickChoice
 
 function btnClickInitials2() {
-  /*
-  var initialsEl = document.querySelector("#initials");
-  console.log("initialsEl", initialsEl);
-  console.log("initialsEl.innerHTML",initialsEl.innerHTML);
-  console.log("initialsEl.textContent",initialsEl.textContent);
-*/
-let initialsText = document.getElementById("initials").value;
+  let initialsText = document.getElementById("initials").value;
   if (initialsText == "" ) {
     initialsText == "  a"; 
   }
-  //hofStored.push({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
+  // Most recent is at beginning of array
   hofStored.unshift({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
   console.log("hofstored[0]", hofStored[0]);
   localStorage.setItem("hofStored", JSON.stringify(hofStored));
+  var tbl = document.querySelector("#hofTable");
+  tbl.innerHTML = "";
   fillHOFTable2();
  }
 
-
+// HOF = Hall of Fame
 function fillHOFTable2() {
   var tbl = document.querySelector("#hofTable");
   var tblBody = document.createElement("tbody");
+
+  // Heading row
+  var row = document.createElement("tr");
+  var msg3 = ["Initials", "Score", "Correct answers"];
+
+  for (var j = 0; j < 3; j++) {
+    // Create a <td> element and a text node, make the text
+    // node the contents of the <td>, and put the <td> at
+    // the end of the table row
+    var cell = document.createElement("td");
+    var cellText = document.createTextNode(msg3[j]);
+    cell.appendChild(cellText);
+    row.appendChild(cell);
+  }
+
+  // add the row to the end of the table body
+  tblBody.appendChild(row);
+
 
   // creating all cells
   for (var i = 0; i < Math.min(10, hofStored.length); i++) {
     // creates a table row
     var row = document.createElement("tr");
-    console.log("i", i);
-    //var msg = [hofStored[i].initials, hofStored[i].score, hofStored[i].corrans];
-    //console.log("msg", msg[0], msg[1], msg[2]);
 
-    var msg2;
+    var msg2 = [hofStored[i].initials, hofStored[i].score, hofStored[i].corrans];
+
     for (var j = 0; j < 3; j++) {
       // Create a <td> element and a text node, make the text
       // node the contents of the <td>, and put the <td> at
       // the end of the table row
       var cell = document.createElement("td");
-      if (j == 0) {
-        msg2 = hofStored[i].initials;
-        console.log("msg2 initials", msg2);
-      }
-      if (j == 1) {
-        msg2 = hofStored[i].score;
-        console.log("msg2 score", msg2);
-      }
-      if (j == 2) {
-        msg2 = hofStored[i].corrans;
-        console.log("msg2 corrans", msg2);
-      }
-      var cellText = document.createTextNode(msg2);
+      var cellText = document.createTextNode(msg2[j]);
       cell.appendChild(cellText);
       row.appendChild(cell);
     }
@@ -301,12 +265,4 @@ function fillHOFTable2() {
 
   // appends <table> into <body>
   body.appendChild(tbl);
-  // sets the border attribute of tbl to 2;
-  //tbl.setAttribute("border", "2");
 }
-
-function saveScore() {
-
-}
-
-//}   // end of function onClickChoice for addeventlistener for choicesList
