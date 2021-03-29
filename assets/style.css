@@ -73,9 +73,14 @@ body {
   }
 
   .grid-item {
-
     text-align: center;
     border: 2px solid rgb(71, 71, 71);
     /*border-top: 1px solid #dfdfdf;*/
+  }
+
+
+
+  .tab-border td {
+    border: 2px solid midnightblue;
   }
   

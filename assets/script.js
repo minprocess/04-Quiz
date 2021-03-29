@@ -52,14 +52,6 @@ var questions = [
     }
   ];
 
-  var hofStoredInit = [{
-      initials: "zzz",
-      score: 0,
-      corrans: 0
-    }];
-  
-
-
 function setAttributes() {
   // Create six choices that user can choose from
   for (var i = 0; i < maxChoices; i++) {
@@ -229,11 +221,11 @@ function onClickChoice(e) {
       }
 */
       hofStored = JSON.parse(localStorage.getItem("hofStored") || "[]");
-      //users = JSON.parse(localStorage.getItem("users") || "[]");
-      
-      if (hofStored == null) {
-        localStorage.setItem("hofStored", JSON.stringify(hofStoredInit));
+      if (hofStored.length > 0) {
+        console.log("hofstored[0].initials", hofStored[0].initials);
       }
+      //users = JSON.parse(localStorage.getItem("users") || "[]");
+
       var tableTitle = document.querySelector("#hof-title");
       tableTitle.textContent = "Last 10 Scores Newest to Oldest";
       fillHOFTable2();
@@ -246,16 +238,19 @@ function onClickChoice(e) {
 }   // End of onClickChoice
 
 function btnClickInitials2() {
+  /*
   var initialsEl = document.querySelector("#initials");
   console.log("initialsEl", initialsEl);
   console.log("initialsEl.innerHTML",initialsEl.innerHTML);
   console.log("initialsEl.textContent",initialsEl.textContent);
-
-  if (initialsEl.textContent == "" ) {
-    initialsEl.textContent == "  "; 
+*/
+let initialsText = document.getElementById("initials").value;
+  if (initialsText == "" ) {
+    initialsText == "  a"; 
   }
-  hofStored.push({initials: initialsEl.textContent, score: score, corrans:numCorrAnsSoFar});
-  //hofStored.unshift(hofStoredInit);
+  //hofStored.push({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
+  hofStored.unshift({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
+  console.log("hofstored[0]", hofStored[0]);
   localStorage.setItem("hofStored", JSON.stringify(hofStored));
   fillHOFTable2();
  }
@@ -263,19 +258,17 @@ function btnClickInitials2() {
 
 function fillHOFTable2() {
   var tbl = document.querySelector("#hofTable");
-  console.log("tbl begin", tbl);
   var tblBody = document.createElement("tbody");
-  console.log("fillHOFTable2");
-  console.log("hofStored.length", hofStored.length);
+
   // creating all cells
-  for (var i = 0; i < 2; i++) {
+  for (var i = 0; i < Math.min(10, hofStored.length); i++) {
     // creates a table row
     var row = document.createElement("tr");
     console.log("i", i);
     //var msg = [hofStored[i].initials, hofStored[i].score, hofStored[i].corrans];
     //console.log("msg", msg[0], msg[1], msg[2]);
 
-    var msg2
+    var msg2;
     for (var j = 0; j < 3; j++) {
       // Create a <td> element and a text node, make the text
       // node the contents of the <td>, and put the <td> at
@@ -285,7 +278,7 @@ function fillHOFTable2() {
         msg2 = hofStored[i].initials;
         console.log("msg2 initials", msg2);
       }
-      if (j == 2) {
+      if (j == 1) {
         msg2 = hofStored[i].score;
         console.log("msg2 score", msg2);
       }
@@ -293,7 +286,7 @@ function fillHOFTable2() {
         msg2 = hofStored[i].corrans;
         console.log("msg2 corrans", msg2);
       }
-      var cellText = document.createTextNode(msg[i]);
+      var cellText = document.createTextNode(msg2);
       cell.appendChild(cellText);
       row.appendChild(cell);
     }
@@ -309,7 +302,7 @@ function fillHOFTable2() {
   // appends <table> into <body>
   body.appendChild(tbl);
   // sets the border attribute of tbl to 2;
-  tbl.setAttribute("border", "2");
+  //tbl.setAttribute("border", "2");
 }
 
 function saveScore() {
