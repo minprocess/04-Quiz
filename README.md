@@ -6,7 +6,7 @@ This web page is a timed quiz on Javascript fundamentals. Scores are stored.</br
 This is a work in progress. The Javascript programming was a challenge.
 
 ## Installation
-This project uses only HTML, CSS and Javascript so it will run without any other APIs
+This project uses only HTML, CSS and Javascript so it will run without any other APIs. I did not look at any quiz programs on the internet so that I could learn the most.
 
 ## Usage
 After the web page appears, click the button with the text "Start first question!". After clicking the first question appears. The countdown timer starts at 15. You have 15 seconds from the start of countdown to click a button. If you answer correctly you the number of seconds left in the countdown is added to the score. If the answer is wrong the score is unchanged. If you click the answer "I don't know" then the score is unchanged. The countdown clock stops when you click an answer or the clock goes to zero. There are 4 questions to the highest score is 4x15 or 60. If you answered correctly you are told that. If you answered incorrectly you are told that and the correct answer. Click the Next button to go the next question. After the last question is answered or times out you will see a label and text box for your initials. If you enter your initials and click the "Enter my score" button your initials, score and number of correct answers will appear.
@@ -27,7 +27,8 @@ To add a screenshot, create an `assets/images` folder in your repository and upl
 2. The formatting is hideous and could be greatly improved.
 3. The table of scores are just the last 10. This should be sorted greatest to least but could not be done because of limited time.
 4. The formatting of scores table is awful.
-5. The scores table does not work right. Need to fix.
+5. There is an undefined reference to <body> in the routine that creates the Hall of Fame table.
+
 
 ## License
 MIT License

@@ -236,6 +236,7 @@ function fillHOFTable2() {
 
   // add the row to the end of the table body
   tblBody.appendChild(row);
+  //tbl.appendChild(row);
 
 
   // creating all cells
@@ -257,11 +258,11 @@ function fillHOFTable2() {
 
     // add the row to the end of the table body
     tblBody.appendChild(row);
+    //tbl.appendChild(row);
   }
 
   // put the <tbody> in the <table>
   tbl.appendChild(tblBody);
-  console.log("tbl end", tbl);
 
   // appends <table> into <body>
   body.appendChild(tbl);
