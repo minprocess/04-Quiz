@@ -24,10 +24,10 @@ var choiceCount;
 var maxChoices = 7;
 var score = 0;
 var hasBeenClicked = false;
-var hofInitials[];
-var hofScores[];
-var hofCorrAns[];
-
+var hofInitials;
+var hofScores;
+var hofCorrAns;
+var hofStored;   // initials, score, correct answers; equivalent to hofInitials, hofScores, hofCorrAns
 
 var questions = [
     {
@@ -51,6 +51,14 @@ var questions = [
       answer: "none of the above"
     }
   ];
+
+  var hofStoredInit = [{
+      initials: "zzz",
+      score: 0,
+      corrans: 0
+    }];
+  
+
 
 function setAttributes() {
   // Create six choices that user can choose from
@@ -89,11 +97,10 @@ function changeChoices() {
 
 // Handler for click on Button
 function btnClickNext() {
-  console.log("In btnClick");
   if (stage == 0) {
     // Stage 1 - Waiting to start
     stage = 1;
-
+/*
     console.log("    choicesList ", choicesList);
     console.log("    questionText ", questionText);
     console.log("    timeLeftText ", timeLeftText);
@@ -101,7 +108,7 @@ function btnClickNext() {
     console.log("    correctAnsText ", correctAnsText);
     console.log("    yourAnsText ", yourAnsText);
     console.log("    scoreText ", scoreText);
-
+*/
     setAttributes();   // setAttributes of li elements
     changeChoices();
 
@@ -119,15 +126,15 @@ function btnClickNext() {
     recScoreBtn = true;
     numCorrAnsSoFar = 0;
     x = setInterval(myOnTimer, 1000);
-    console.log("btnClick stage 1, x", x);
+    //console.log("btnClick stage 1, x", x);
   }
   else {
     // Stage 2 - Asking questions
-    console.log("btnClick in Stage 2");
+    //console.log("btnClick in Stage 2");
     curQuest++;
     if (curQuest < questions.length)
     {
-      console.log("btnClick curQuest, questions.length", curQuest, questions.length);
+      //console.log("btnClick curQuest, questions.length", curQuest, questions.length);
 
       changeChoices();
       timeLeftText.text = maxTimeGiven;
@@ -169,12 +176,9 @@ function onClickChoice(e) {
     if(!target) { return; } // If element doesn't exist
   }
   if (hasBeenClicked) {return;}
-  console.log("target.tagName: ", target.tagName);
+
   if (target.tagName === "LI") {
     var index = target.getAttribute("data-index");
-    console.log("onClickChoice, index", index);
-    console.log("onClickChoice, choiceCount", choiceCount);
-    console.log("onClickChoice, choice", questions[curQuest].choices[index]);
     hasBeenClicked = true;
     clearInterval(x);  // stop timer
     //var msg;
@@ -190,7 +194,6 @@ function onClickChoice(e) {
       score += 0;   // User does not receive any points
     }
     else if (questions[curQuest].choices[index] == questions[curQuest].answer) {
-      console.log("correct answer!");
       yourAnsText.textContent = "Your answer is " + questions[curQuest].choices[index] + ", which is correct! Good going!";
       correctAnsText.textContent = "";   // No need to show correct answer when the user got it right
       score += timeLeft;
@@ -203,58 +206,110 @@ function onClickChoice(e) {
     UpdateDashboard();
 
     if (curQuest == questions.length-1) {
+      /************* All questions have been asked! *************/
       //nextBtn.disabled = true;
       nextBtn.textContent = "Take the quiz again";
       recScoreBtn.disabled = false;
       curQuest = 0;
+      /*
+      hofInitials = JSON.parse(localStorage.getItem("hofInitials"));
+      if (hofInitials == null) {
+        hofInitials = ['wtp'];
+        localStorage.setItem("hofInitials", JSON.stringify(hofInitials));
+      }
+      hofScores = JSON.parse(localStorage.getItem("hofScores"));
+      if (hofScores == null) {
+        hofInitials = [0];
+        localStorage.setItem("hofScores", JSON.stringify(hofScores));
+      }
+      hofCorrAns = JSON.parse(localStorage.getItem("hofCorrAns"));
+      if (hofCorrAns == null) {
+        hofCorrAns = [0];
+        localStorage.setItem("hofCorrAns", JSON.stringify(hofCorrAns));        
+      }
+*/
+      hofStored = JSON.parse(localStorage.getItem("hofStored") || "[]");
+      //users = JSON.parse(localStorage.getItem("users") || "[]");
+      
+      if (hofStored == null) {
+        localStorage.setItem("hofStored", JSON.stringify(hofStoredInit));
+      }
+      var tableTitle = document.querySelector("#hof-title");
+      tableTitle.textContent = "Last 10 Scores Newest to Oldest";
+      fillHOFTable2();
+
     }
     else {
       nextBtn.textContent = "Next";
     }
-  }   // end of onClickChoice
+  }   // end of if (target.tagname ...
+}   // End of onClickChoice
 
-  function btnClickInitials() {
-    initialsEl = document.querySelector("#initials");
-    hofInitials.unshift(initialsEl.textContent);
-    hofScores.unshift(score);
-    hofCorrAns.unshift(numCorrAnsSoFar);
+function btnClickInitials2() {
+  var initialsEl = document.querySelector("#initials");
+  console.log("initialsEl", initialsEl);
+  console.log("initialsEl.innerHTML",initialsEl.innerHTML);
+  console.log("initialsEl.textContent",initialsEl.textContent);
+
+  if (initialsEl.textContent == "" ) {
+    initialsEl.textContent == "  "; 
   }
+  hofStored.push({initials: initialsEl.textContent, score: score, corrans:numCorrAnsSoFar});
+  //hofStored.unshift(hofStoredInit);
+  localStorage.setItem("hofStored", JSON.stringify(hofStored));
+  fillHOFTable2();
+ }
 
-// End of quiz
-// 1. get scores from storage
-function AddScore() {
-  // Stringify and set key in localStorage to todos array
-  localStorage.setItem("hofInitials", JSON.stringify(hofInitials));
-  localStorage.setItem("hofScores", JSON.stringify(hofInitials));
-  localStorage.setItem("hofCorrAns", JSON.stringify(hofInitials));
 
-}   // End of function endOfQuiz() 
+function fillHOFTable2() {
+  var tbl = document.querySelector("#hofTable");
+  console.log("tbl begin", tbl);
+  var tblBody = document.createElement("tbody");
+  console.log("fillHOFTable2");
+  console.log("hofStored.length", hofStored.length);
+  // creating all cells
+  for (var i = 0; i < 2; i++) {
+    // creates a table row
+    var row = document.createElement("tr");
+    console.log("i", i);
+    //var msg = [hofStored[i].initials, hofStored[i].score, hofStored[i].corrans];
+    //console.log("msg", msg[0], msg[1], msg[2]);
 
-function fillHOFTable() {
-  // Read scores from local storage
-  hofInitials = JSON.parse(localStorage.getItem("hofInitials"));  // array of initials
-  hofScores = JSON.parse(localStorage.getItem("hofScores"));    // array of scores
-  hofCorrAns = JSON.parse(localStorage.getItem("hofCorrAns"));    // array of correct answers
-
-  // If todos were retrieved from localStorage, update the todos array to it
-  var j;
-  var cell;
-  var Elem;
-  var scoreEl;
-  if (storedScores !== null) {
-    for (var i=0; i<Math.min(storedScores.length, 5); i++) {
-      cell = "#initials" + i;
-      Elem = document.querySelector(cell);  // initials
-      Elem.textContent = hofInitials[i];
-      cell = "#score" + i;
-      Elem = document.querySelector(cell);   // score
-      Elem.textContent = hofScores[i,0];
-      cell = "#corr-ans" + i;
-      Elem = document.querySelector(cell);    // correct answers
-      Elem.textContent = hofCorrAns[i,0];
-
+    var msg2
+    for (var j = 0; j < 3; j++) {
+      // Create a <td> element and a text node, make the text
+      // node the contents of the <td>, and put the <td> at
+      // the end of the table row
+      var cell = document.createElement("td");
+      if (j == 0) {
+        msg2 = hofStored[i].initials;
+        console.log("msg2 initials", msg2);
+      }
+      if (j == 2) {
+        msg2 = hofStored[i].score;
+        console.log("msg2 score", msg2);
+      }
+      if (j == 2) {
+        msg2 = hofStored[i].corrans;
+        console.log("msg2 corrans", msg2);
+      }
+      var cellText = document.createTextNode(msg[i]);
+      cell.appendChild(cellText);
+      row.appendChild(cell);
     }
+
+    // add the row to the end of the table body
+    tblBody.appendChild(row);
   }
+
+  // put the <tbody> in the <table>
+  tbl.appendChild(tblBody);
+  console.log("tbl end", tbl);
+
+  // appends <table> into <body>
+  body.appendChild(tbl);
+  // sets the border attribute of tbl to 2;
+  tbl.setAttribute("border", "2");
 }
 
 function saveScore() {
