@@ -73,7 +73,6 @@ function changeChoices() {
   // Clear list of question choices
   for (var i=0; i < items.length; i++) {
     items[i].textContent = "";
-    console.log("");
   }
   for (var i = 0; i < choiceCount; i++) {
       items[i].textContent = questions[curQuest].choices[i];
@@ -104,7 +103,6 @@ function btnClickNext() {
     recScoreBtn = true;
     numCorrAnsSoFar = 0;
     x = setInterval(myOnTimer, 1000);
-    //console.log("btnClick stage 1, x", x);
   }
   else {
     // Stage 2 - Asking questions
@@ -186,9 +184,6 @@ function onClickChoice(e) {
       recScoreBtn.disabled = false;
       curQuest = 0;
       hofStored = JSON.parse(localStorage.getItem("hofStored") || "[]");
-      if (hofStored.length > 0) {
-        console.log("hofstored[0].initials", hofStored[0].initials);
-      }
 
       var tableTitle = document.querySelector("#hof-title");
       tableTitle.textContent = "Last 10 Scores Newest to Oldest";
@@ -208,7 +203,7 @@ function btnClickInitials2() {
   }
   // Most recent is at beginning of array
   hofStored.unshift({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
-  console.log("hofstored[0]", hofStored[0]);
+  
   localStorage.setItem("hofStored", JSON.stringify(hofStored));
   var tbl = document.querySelector("#hofTable");
   tbl.innerHTML = "";
@@ -265,5 +260,5 @@ function fillHOFTable2() {
   tbl.appendChild(tblBody);
 
   // appends <table> into <body>
-  body.appendChild(tbl);
+  document.body.appendChild(tbl);
 }

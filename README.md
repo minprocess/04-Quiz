@@ -27,7 +27,6 @@ To add a screenshot, create an `assets/images` folder in your repository and upl
 2. The formatting is hideous and could be greatly improved.
 3. The table of scores are just the last 10. This should be sorted greatest to least but could not be done because of limited time.
 4. The formatting of scores table is awful.
-5. There is an undefined reference to <body> in the routine that creates the Hall of Fame table.
 
 
 ## License
