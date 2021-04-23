@@ -21,7 +21,6 @@ var score;
 var timeLeft;
 var waitFlag;
 var choiceCount;
-var maxChoices = 7;
 var score = 0;
 var hasBeenClicked = false;
 var hofInitials;
@@ -31,7 +30,7 @@ var hofStored;   // initials, score, correct answers; equivalent to hofInitials,
 
 var questions = [
     {
-      title: "Which of the following is not valid for alight-items?",
+      title: "Which of the following is not valid for align-items?",
       choices: ["flex-start", "center", "bottom", "stretch", "flex-end", "none of the above", "I don't know"],
       answer: "bottom"
     },
@@ -41,9 +40,9 @@ var questions = [
       answer: "none of the above"
     },
     {
-      title: "What is the best food while coding Javascript?",
-      choices: ["pizza", "pasta", "bread", "none of the above", "I don't know"],
-      answer: "pasta"
+      title: "Commonly used data types do not include",
+      choices: ["strings", "booleans", "alerts", "numbers", "none of the above", "I don't know"],
+      answer: "alerts"
     },
     {
       title: "What is the name of your Javascript instructor?",
@@ -54,7 +53,9 @@ var questions = [
 
 function setAttributes() {
   // Create six choices that user can choose from
-  for (var i = 0; i < maxChoices; i++) {
+  console.log("choiceCount", choiceCount);
+  choicesList.innerHTML = "";
+  for (var i = 0; i < choiceCount; i++) {
     var li = document.createElement("li");
     li.textContent = "";
     li.setAttribute("data-index", i);
@@ -69,6 +70,7 @@ function changeChoices() {
   questionText.innerHTML = questions[curQuest].title;
   // Set new choices text
   choiceCount = questions[curQuest].choices.length;
+  setAttributes();
   var items = choicesList.getElementsByTagName("li");
   // Clear list of question choices
   for (var i=0; i < items.length; i++) {
@@ -86,7 +88,7 @@ function btnClickNext() {
     // Stage 1 - Waiting to start
     stage = 1;
 
-    setAttributes();   // setAttributes of li elements
+    //setAttributes();   // setAttributes of li elements
     changeChoices();
 
     choicesList.addEventListener("click", onClickChoice);   // listen for click on a choice
@@ -198,6 +200,7 @@ function onClickChoice(e) {
 
 function btnClickInitials2() {
   let initialsText = document.getElementById("initials").value;
+  console.log("initals"+document.querySelector("#initials").value);
   if (initialsText == "" ) {
     initialsText == "  a"; 
   }
