@@ -4,18 +4,18 @@
       <meta charset="UTF-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>What web pages looked like in the 1800s</title>
+      <title>Javascript Quiz</title>
       <link rel="stylesheet" href="./assets/style.css">
   </head>
   <body>
-    <h2>The Quiztronic Quiz Master</h2>
+    <h2>Quiz about Javascript</h2>
 
     <div class="grid1">
       <div class="grid-item">Correct answers</div>
       <div class="grid-item">Score</div>
       <div class="grid-item">Time left</div>
 
-      <div class="grid-item" id="numCorrectAnsSoFar">0/4</div>
+      <div class="grid-item" id="numCorrectAnsSoFar">0/0</div>
       <div class="grid-item" id="score">0</div>
       <div class="grid-item" id="time">15</div>
     </div>
@@ -34,11 +34,13 @@
     <h2 id="hofQuestion"></h2>  <!-- Want to enter your score into Hall of Fame? -->
     <label for="initials">Initials:</label>
     <input type="text" id="initials" required placeholder="Initials">
-    <button onclick="btnClickInitials2()">Enter my score!</button>
-    <h3 id="hof-title"></h3>
-    <table id="hofTable" class="tab-border">
+    <button onclick="btnClickInitials()">Enter my score!</button>
+    <h3 id="hof-title">Hall of Fame</h3>
+
+    <table id="tableData" class="tab-border">
     </table>
 
     <script src="./assets/script.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></Script>
   </body>
 </html>

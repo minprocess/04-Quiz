@@ -29,31 +29,35 @@ var hofCorrAns;
 var hofStored;   // initials, score, correct answers; equivalent to hofInitials, hofScores, hofCorrAns
 
 var questions = [
-    {
-      title: "Which of the following is not valid for align-items?",
-      choices: ["flex-start", "center", "bottom", "stretch", "flex-end", "none of the above", "I don't know"],
-      answer: "bottom"
+  {
+    title: "Commonly used data types DO NOT include:",
+    choices: ["Strings", "Booleans", "Alerts", "Numbers", "none of the above", "I don't know"],
+    answer: "Alerts"
     },
     {
-      title: "Which of the following is not valid for justify-content?",
-      choices: ["space-between", "flex-start", "flex-end", "center", "space-around", "none of the above", "I don't know"],
-      answer: "none of the above"
+    title: "The condition in an if/else statement is enclosed within ______",
+    choices: ["Quotes", "Curly brackets", "Parentheses", "Square brackets", "none of the above", "I don't know"],
+    answer: "Parentheses"
     },
     {
-      title: "Commonly used data types do not include",
-      choices: ["strings", "booleans", "alerts", "numbers", "none of the above", "I don't know"],
-      answer: "alerts"
+    title: "Arrays in JavaScript can be used to store _____",
+    choices: ["Numbers and strings", "Other arrays", "Booleans", "All of the above", "I don't know"],
+    answer: "All of the above"
     },
     {
-      title: "What is the name of your Javascript instructor?",
-      choices: ["Ant", "Michael", "Stacey", "none of the above", "I don't know"],
-      answer: "Ant"
+    title: "String values must be enclosed with ______ when being assigned to variables",
+    choices: ["Commas", "Curly brackets", "Quotes", "Parentheses", "none of the above", "I don't know"],
+    answer: "Quotes"
+    },
+    {
+    title: "A very useful tool used during development and debugging for printing content to the debugger is:",
+    choices: ["JavaScript", "Terminal/bash", "For loops", "Console.log", "none of the above", "I don't know"],
+    answer: "Console.log"
     }
+    
   ];
 
 function setAttributes() {
-  // Create six choices that user can choose from
-  console.log("choiceCount", choiceCount);
   choicesList.innerHTML = "";
   for (var i = 0; i < choiceCount; i++) {
     var li = document.createElement("li");
@@ -79,7 +83,7 @@ function changeChoices() {
   for (var i = 0; i < choiceCount; i++) {
       items[i].textContent = questions[curQuest].choices[i];
   }
-  items[choiceCount] = "I don't know";
+  //items[choiceCount] = "I don't know";
 }
 
 // Handler for click on Next Button
@@ -88,7 +92,7 @@ function btnClickNext() {
     // Stage 1 - Waiting to start
     stage = 1;
 
-    //setAttributes();   // setAttributes of li elements
+    // Set the possible answers (that is, the choices presented to the user) in li elments
     changeChoices();
 
     choicesList.addEventListener("click", onClickChoice);   // listen for click on a choice
@@ -96,7 +100,9 @@ function btnClickNext() {
     timeLeft = maxTimeGiven;
     nextBtn.textContent = "Next";
     scoreText.textContent = "0";
+    console.log("scoreText.textContent set in btnclicknext stage 0");
     timeLeftText.textContent = maxTimeGiven;
+    numCorrAnsSoFarText.textContent = "0/0";
     // These appear below question and choices
     correctAnsText.textContent = "";
     yourAnsText.textContent = "";
@@ -145,6 +151,7 @@ function UpdateDashboard() {
 
 // This is handler for clicking one of the choices
 function onClickChoice(e) {
+  console.log("onClickChoice");
   var target = e.target; // Clicked element
   while (target && target.parentNode !== choicesList) {
     target = target.parentNode; // If the clicked element isn't a direct child
@@ -185,12 +192,15 @@ function onClickChoice(e) {
       nextBtn.textContent = "Take the quiz again";
       recScoreBtn.disabled = false;
       curQuest = 0;
+      stage = 0
       hofStored = JSON.parse(localStorage.getItem("hofStored") || "[]");
 
       var tableTitle = document.querySelector("#hof-title");
       tableTitle.textContent = "Last 10 Scores Newest to Oldest";
-      fillHOFTable2();
-
+      console.log("line 199 hofStored");
+      console.log(hofStored);
+      console.log("end hofStored")
+      loadTableData();
     }
     else {
       nextBtn.textContent = "Next";
@@ -198,7 +208,7 @@ function onClickChoice(e) {
   }   // end of if (target.tagname ...
 }   // End of onClickChoice
 
-function btnClickInitials2() {
+function btnClickInitials() {
   let initialsText = document.getElementById("initials").value;
   console.log("initals"+document.querySelector("#initials").value);
   if (initialsText == "" ) {
@@ -206,62 +216,19 @@ function btnClickInitials2() {
   }
   // Most recent is at beginning of array
   hofStored.unshift({initials: initialsText, score: score, corrans:numCorrAnsSoFar});
-  
   localStorage.setItem("hofStored", JSON.stringify(hofStored));
-  var tbl = document.querySelector("#hofTable");
-  tbl.innerHTML = "";
-  fillHOFTable2();
+
+  loadTableData();
  }
 
-// HOF = Hall of Fame
-function fillHOFTable2() {
-  var tbl = document.querySelector("#hofTable");
-  var tblBody = document.createElement("tbody");
+function loadTableData() {
+  let dataHtml = '<thead><tr><th>Initials</th><th>Score</th><th>Correct answers</th></tr></thead>';
 
-  // Heading row
-  var row = document.createElement("tr");
-  var msg3 = ["Initials", "Score", "Correct answers"];
-
-  for (var j = 0; j < 3; j++) {
-    // Create a <td> element and a text node, make the text
-    // node the contents of the <td>, and put the <td> at
-    // the end of the table row
-    var cell = document.createElement("td");
-    var cellText = document.createTextNode(msg3[j]);
-    cell.appendChild(cellText);
-    row.appendChild(cell);
+  for (let person of hofStored) {
+    // corrans is correct answers
+    dataHtml += `<tr><td>${person.initials}</td><td>${person.score}</td><td>${person.corrans}</td></tr>`;
   }
 
-  // add the row to the end of the table body
-  tblBody.appendChild(row);
-  //tbl.appendChild(row);
-
-
-  // creating all cells
-  for (var i = 0; i < Math.min(10, hofStored.length); i++) {
-    // creates a table row
-    var row = document.createElement("tr");
-
-    var msg2 = [hofStored[i].initials, hofStored[i].score, hofStored[i].corrans];
-
-    for (var j = 0; j < 3; j++) {
-      // Create a <td> element and a text node, make the text
-      // node the contents of the <td>, and put the <td> at
-      // the end of the table row
-      var cell = document.createElement("td");
-      var cellText = document.createTextNode(msg2[j]);
-      cell.appendChild(cellText);
-      row.appendChild(cell);
-    }
-
-    // add the row to the end of the table body
-    tblBody.appendChild(row);
-    //tbl.appendChild(row);
-  }
-
-  // put the <tbody> in the <table>
-  tbl.appendChild(tblBody);
-
-  // appends <table> into <body>
-  document.body.appendChild(tbl);
+  const tableBody = document.getElementById("tableData");
+  tableBody.innerHTML = dataHtml;
 }
