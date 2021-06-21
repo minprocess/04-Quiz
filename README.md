@@ -6,7 +6,10 @@ This web page is a timed quiz on Javascript fundamentals. Scores are stored.</br
 This is a work in progress. The Javascript programming was a challenge.
 
 ## Installation
-This project uses only HTML, CSS and Javascript so it will run without any other APIs. I did not look at any quiz programs on the internet so that I could learn the most.
+GitHub repository for the source code (and this README): https://github.com/minprocess/04-Quiz
+The GitHub Pages link is https://minprocess.github.io/04-Quiz/
+
+This project uses only HTML, CSS and Javascript so it will run without any other APIs.
 
 ## Usage
 After the web page appears, click the button with the text "Start first question!". After clicking the first question appears. The countdown timer starts at 15. You have 15 seconds from the start of countdown to click a button. If you answer correctly you the number of seconds left in the countdown is added to the score. If the answer is wrong the score is unchanged. If you click the answer "I don't know" then the score is unchanged. The countdown clock stops when you click an answer or the clock goes to zero. There are 4 questions to the highest score is 4x15 or 60. If you answered correctly you are told that. If you answered incorrectly you are told that and the correct answer. Click the Next button to go the next question. After the last question is answered or times out you will see a label and text box for your initials. If you enter your initials and click the "Enter my score" button your initials, score and number of correct answers will appear.
@@ -23,10 +26,9 @@ To add a screenshot, create an `assets/images` folder in your repository and upl
     ![alt text](assets/images/screenshot.png)
 
 ## Needed improvements
-1. Questions about Javascript are needed. The ones here were made up on the spot and could not be improved because of limited time.
-2. The formatting is hideous and could be greatly improved.
-3. The table of scores are just the last 10. This should be sorted greatest to least but could not be done because of limited time.
-4. The formatting of scores table is awful.
+1. The formatting is hideous and could be greatly improved.
+2. The table of scores is not sorted. Would like to limit to last 10 scores. This should be sorted greatest to least but could not be done because of limited time.
+3. The formatting of scores table needs work.
 
 
 ## License
