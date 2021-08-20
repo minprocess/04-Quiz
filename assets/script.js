@@ -100,7 +100,6 @@ function btnClickNext() {
     timeLeft = maxTimeGiven;
     nextBtn.textContent = "Next";
     scoreText.textContent = "0";
-    console.log("scoreText.textContent set in btnclicknext stage 0");
     timeLeftText.textContent = maxTimeGiven;
     numCorrAnsSoFarText.textContent = "0/0";
     // These appear below question and choices
@@ -151,7 +150,6 @@ function UpdateDashboard() {
 
 // This is handler for clicking one of the choices
 function onClickChoice(e) {
-  console.log("onClickChoice");
   var target = e.target; // Clicked element
   while (target && target.parentNode !== choicesList) {
     target = target.parentNode; // If the clicked element isn't a direct child
@@ -197,9 +195,6 @@ function onClickChoice(e) {
 
       var tableTitle = document.querySelector("#hof-title");
       tableTitle.textContent = "Last 10 Scores Newest to Oldest";
-      console.log("line 199 hofStored");
-      console.log(hofStored);
-      console.log("end hofStored")
       loadTableData();
     }
     else {
@@ -210,7 +205,6 @@ function onClickChoice(e) {
 
 function btnClickInitials() {
   let initialsText = document.getElementById("initials").value;
-  console.log("initals"+document.querySelector("#initials").value);
   if (initialsText == "" ) {
     initialsText == "  a"; 
   }
